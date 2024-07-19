@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String    @unique
+  password    String
+  role        String    @default("free")
+  subscription Subscription?
+  comments    Comment[]
+  likes       Like[]
+}
+
+model Content {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  type        String
+  authorId    Int
+  isFree      Boolean
+}
+
+model Appointment {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  expertId   Int
+  startTime  DateTime
+  endTime    DateTime
+  status     String
+  price      Float
+}
+
+model Subscription {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  planId     Int
+  startDate  DateTime
+  endDate    DateTime
+}
+
+model SubscriptionPlan {
+  id         Int       @id @default(autoincrement())
+  name       String
+  price      Float
+  benefits   String[]
+}
+
+model Order {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  bookId     Int
+  quantity   Int
+  status     String
+  paymentId  String
+}
+
+model Book {
+  id         Int       @id @default(autoincrement())
+  title      String
+  author     String
+  description String
+  price      Float
+  stock      Int
+}
+
+model Comment {
+  id         Int       @id @default(autoincrement())
+  postId     Int
+  authorId   Int
+  comment    String
+}
+
+model Like {
+  id         Int       @id @default(autoincrement())
+  postId     Int
+  userId     Int
+}
